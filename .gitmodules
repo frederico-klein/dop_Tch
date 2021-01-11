@@ -4,3 +4,6 @@
 [submodule "workspace/catkin_ws/src/text_classifiers"]
 	path = workspace/catkin_ws/src/text_classifiers
 	url = https://github.com/frederico-klein/text_classifiers.git
+[submodule "workspace/esa_project"]
+	path = workspace/esa_project
+	url = https://github.com/amreelab/esa_project.git
