@@ -66,11 +66,13 @@ RUN echo "export VISIBLE=now" >> /etc/profile
 EXPOSE 22
 
 ADD requirements_tch.txt /root/
-RUN pip install -r /root/requirements_tch.txt
+RUN pip3 install pip --upgrade \
+    && pip3 install -r /root/requirements_tch.txt
 
 ##this is hacky, fix properly.
 RUN mkdir -p /usr/local/nvidia/lib/ && \
   ln -s /opt/conda/lib/libcudart.so.11.0  /usr/local/nvidia/lib/libcudart.so.10.1
 
 ADD scripts/entrypoint.sh /root/
+WORKDIR /workspace
 ENTRYPOINT ["/root/entrypoint.sh"]

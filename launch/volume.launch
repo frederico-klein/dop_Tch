@@ -1,4 +1,5 @@
 <launch>
+  <arg name="start_master" default="True" />
   <node name="my_tub_volume" pkg="rosdop" type="cr_volume.py" output="screen">
     <param name="name"            type="string" value="tubvolume0"                            />
     <param name="username"        type="string" value="frederico"                             />
@@ -11,6 +12,6 @@
     <param name="ws_path"         type="string" value="/root/dop_tch"                  />
   </node>
 
-  <node name="docker_master" pkg="rosdop" type="docker_master.py" output="screen"/>
+  <node if="$(arg start_master)" name="docker_master" pkg="rosdop" type="docker_master.py" output="screen"/>
 
 </launch>
