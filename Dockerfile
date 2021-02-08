@@ -23,6 +23,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 #### ROS stuff
 
+ADD requirements_ros.txt /root/
+RUN pip3 install --trusted-host pypi.python.org -r /root/requirements_ros.txt && \
+    pip2 install --trusted-host pypi.python.org -r /root/requirements_ros.txt && \
+    python -m pip install --trusted-host pypi.python.org -r /root/requirements_ros.txt
+
+ADD requirements_opencv.txt /root/
+RUN python -m pip install --upgrade pip && \
+    python -m pip install --trusted-host pypi.python.org -r /root/requirements_opencv.txt
+
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
 ADD scripts/ros_key.sh /root/
 RUN /root/ros_key.sh
@@ -40,6 +49,9 @@ RUN apt-get install -y --fix-missing \
      tar\
      libboost-all-dev \
      ros-melodic-ros-base \
+     libcv-dev \
+     python-catkin-pkg \
+     python-opencv \
      python-rosdep \
      python-rosinstall \
      python-rosinstall-generator \
@@ -48,6 +60,8 @@ RUN apt-get install -y --fix-missing \
 
      # some more ros stuff
 RUN rosdep init && rosdep update
+ADD scripts/ros.sh /root/
+RUN /root/ros.sh
 RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
 
 # to get sshd working: (adapted from docker docs running_ssh_service)
@@ -62,6 +76,7 @@ RUN mkdir /var/run/sshd \
 
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
+
 
 EXPOSE 22
 
