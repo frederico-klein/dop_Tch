@@ -2,10 +2,9 @@ FROM pytorch/pytorch:latest
 
 ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
-
 ENV DEBIAN_FRONTEND noninteractive
-
 ARG PYTHON_VERSION=3.6
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
          build-essential \
          cmake \
@@ -16,53 +15,74 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
          gnupg2 \
          libjpeg-dev \
          lsb-core \
-         libpng-dev &&\
-     rm -rf /var/lib/apt/lists/*
-
-#TODO: ros not working with python3. needs fixing.
-
-#### ROS stuff
-
-ADD requirements_ros.txt /root/
-RUN pip3 install --trusted-host pypi.python.org -r /root/requirements_ros.txt && \
-    pip2 install --trusted-host pypi.python.org -r /root/requirements_ros.txt && \
-    python -m pip install --trusted-host pypi.python.org -r /root/requirements_ros.txt
-
-ADD requirements_opencv.txt /root/
-RUN python -m pip install --upgrade pip && \
-    python -m pip install --trusted-host pypi.python.org -r /root/requirements_opencv.txt
+         libpng-dev
 
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list
 ADD scripts/ros_key.sh /root/
 RUN /root/ros_key.sh
 
-##after adding the key we need to update it again!
-
 RUN apt-get -y update
 RUN apt-get install -y --fix-missing \
      python3-pip \
-     python-pip \
      openssh-server\
      libssl-dev \
      lsb-core \
-     python-sh \
      tar\
      libboost-all-dev \
-     ros-melodic-ros-base \
-     libcv-dev \
-     python-catkin-pkg \
-     python-opencv \
-     python-rosdep \
-     python-rosinstall \
-     python-rosinstall-generator \
-     python-wstool \
-     && apt-get clean && rm -rf /tmp/* /var/tmp/*
+     libopencv-dev \
+     python3-catkin-pkg \
+     python3-opencv \
+     python3-rosdep \
+     python3-rosinstall \
+     python3-rosinstall-generator \
+     python3-vcstool \
+     python3-empy \
+     python3-coverage \
+     python3-setuptools \
+     python3-defusedxml \
+     && apt-get clean && rm -rf /tmp/* /var/tmp/* && rm -rf /var/lib/apt/lists/*
+
+ADD requirements_opencv.txt /root/
+RUN python -m pip install --upgrade pip && \
+    pip3 install --trusted-host pypi.python.org -r /root/requirements_opencv.txt && \
+    python -m pip install --trusted-host pypi.python.org -r /root/requirements_opencv.txt
+
+ADD requirements_ros.txt /root/
+RUN pip3 install --trusted-host pypi.python.org -r /root/requirements_ros.txt && \
+    python -m pip install --trusted-host pypi.python.org -r /root/requirements_ros.txt
 
      # some more ros stuff
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 RUN rosdep init && rosdep update
+#RUN apt-get -y update ##remove or rosdep will not work!
 ADD scripts/ros.sh /root/
-RUN /root/ros.sh
-RUN echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc
+RUN /root/ros.sh $PYTHON_VERSION melodic
+
+#Imanidiot
+RUN apt-get -y update
+RUN cd /root/ros_catkin_ws &&\
+    rosdep install --from-paths src --ignore-src --rosdistro $ROS_VERSION -y  --os=ubuntu:$UBUNTU_DISTRO
+#RUN apt-get install -y --fix-missing \
+    # librosconsole-bridge-dev
+    # librosconsole-bridge0d
+    # python3-nose
+    # libpoco-dev
+    # libtinyxml2-6
+    # libtinyxml2-dev
+    # python3-lz4
+    # liblz4-dev
+
+## we have python2, but we are making python3 default.
+# RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+# RUN cd /root/ros_catkin_ws &&\
+#   ~/ros_catkin_ws/src/catkin/bin/catkin_make_isolated --install \
+#     -DCMAKE_BUILD_TYPE=Release \
+#     -DSETUPTOOLS_DEB_LAYOUT=OFF \
+#     --cmake-args -DPYTHON_VERSION=$PYTHON_VERSION\
+#       -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+#       -DPYTHON_INCLUDE_DIR=/usr/include/python3.6m \
+#       -DPYTHON_LIBRARY=/usr/lib/x86_64-linux-gnu/libpython3.6m.so && \
+#   echo "source ~/ros_catkin_ws/install_isolated/setup.bash" >>  ~/.bashrc
 
 # to get sshd working: (adapted from docker docs running_ssh_service)
 #add my snazzy banner
@@ -76,7 +96,6 @@ RUN mkdir /var/run/sshd \
 
 ENV NOTVISIBLE "in users profile"
 RUN echo "export VISIBLE=now" >> /etc/profile
-
 
 EXPOSE 22
 
