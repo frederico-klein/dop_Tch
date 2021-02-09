@@ -4,8 +4,8 @@ project(dop_tch)
 set( DOCKERMACHINENAME tch_new)
 ##this must have an alias, but I guess it is fine and shouldn't break
 set( DOCKERWORKINGDIR ../../src/dop_tch/)
-
-set( DOCKERCONTEXT ./)
+#set( nocache OFF)
+set( DOCKERCONTEXT ./dockerfiles)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -108,7 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES dop_tch
+#  LIBRARIES dop_tf
 #  CATKIN_DEPENDS rosdop
 #  DEPENDS system_lib
 )
@@ -126,7 +126,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/dop_tch.cpp
+#   src/${PROJECT_NAME}/dop_tf.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -137,7 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/dop_tch_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/dop_tf_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -155,17 +155,30 @@ include_directories(
 # )
 
 ############
+if(NOCACHE)
 
-add_custom_target( docker_build ALL
-COMMAND docker build -t ${DOCKERMACHINENAME} ${DOCKERCONTEXT}
+  add_custom_target( docker_build_${PROJECT_NAME} ALL
+  COMMAND docker build --no-cache -t ${DOCKERMACHINENAME} -f dockerfiles/Dockerfile ${DOCKERCONTEXT}
 
-#COMMAND ls -la
+  #COMMAND ls -la
 
-COMMENT Building docker image tch_new
-WORKING_DIRECTORY  ${DOCKERWORKINGDIR}
+  COMMENT Building docker image ${DOCKERMACHINENAME} without cache
+  WORKING_DIRECTORY  ${DOCKERWORKINGDIR}
 
-) ## here is the thing, do I want this to run every time?
+  ) ## here is the thing, do I want this to run every time?
 
+else()
+
+  add_custom_target( docker_build_${PROJECT_NAME} ALL
+  COMMAND docker build -t ${DOCKERMACHINENAME} -f dockerfiles/Dockerfile ${DOCKERCONTEXT}
+
+  #COMMAND ls -la
+
+  COMMENT Building docker image ${DOCKERMACHINENAME}
+  WORKING_DIRECTORY  ${DOCKERWORKINGDIR}
+
+  ) ## here is the thing, do I want this to run every time?
+endif(NOCACHE)
 
 
 
@@ -216,7 +229,7 @@ WORKING_DIRECTORY  ${DOCKERWORKINGDIR}
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_dop_tch.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_dop_tf.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

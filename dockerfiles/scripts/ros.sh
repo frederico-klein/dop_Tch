@@ -4,6 +4,8 @@ PYTHON_VERSION=$1
 ROS_VERSION=$2
 UBUNTU_DISTRO=$(lsb_release -sc)
 ROS_PYTHON_VERSION=3
+
+apt-get -y update
 mkdir -p ~/ros_catkin_ws/src
 pushd ~/ros_catkin_ws
 if [ -f "$ROS_VERSION-ros_comm-wet.rosinstall" ]
@@ -13,6 +15,7 @@ else
 	rosinstall_generator ros_comm sensor_msgs image_transport common_msgs cv_bridge --rosdistro $ROS_VERSION --deps --wet-only > $ROS_VERSION-ros_comm-wet.rosinstall
 fi
 vcs import src < $ROS_VERSION-ros_comm-wet.rosinstall
+apt-get -y update
 rosdep install --from-paths src --ignore-src --rosdistro $ROS_VERSION -y  --os=ubuntu:$UBUNTU_DISTRO
 
 popd
