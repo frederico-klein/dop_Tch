@@ -1,11 +1,7 @@
 rosdep
+rospkg
 rosinstall_generator
 wstool
-rosinstall
-pyyaml
-empy
-defusedxml
-netifaces
-rospkg
+vcstool
+catkin_tools
 catkin_pkg
-boost
