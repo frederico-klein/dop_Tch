@@ -1,12 +1,13 @@
 <launch>
+  <!-- TODO: terminology here is inconsistent. fix -->
   <node name="my_torch_tub" pkg="rosdop" type="DockerTub.py" output="screen" required="true">
     <param name="name"            type="string"       value="tub0"           />
     <param name="imagename"       type="string"       value="tch_new"        />
     <param name="network_name"    type="string"       value="br0"            />
     <param name="tub_volume"      type="string"       value="tubvolume0"     />
-    <param name="hostname"        type="string"       value="torch_machine4" />
+    <param name="container_hostname"        type="string"       value="torch_machine4" />
     <param name="dockerfile_directory" type="string"  value="."              />
-    <param name="machineip"            type="string"  value="172.28.6.31"    />
+    <param name="containerip"            type="string"  value="172.28.5.31"    />
   </node>
 
 </launch>

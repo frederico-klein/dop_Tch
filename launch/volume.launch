@@ -3,7 +3,7 @@
   <node name="my_tub_volume" pkg="rosdop" type="cr_volume.py" output="screen">
     <param name="name"            type="string" value="tubvolume0"                            />
     <param name="username"        type="string" value="frederico"                             />
-    <param name="sshfs_hostname"  type="string" value="192.168.0.6"                           />
+    <param name="sshfs_hostname"  type="string" value="192.168.0.11"                           />
     <param name="identity_file"   type="string" value="/root/.ssh/id_rsa"                     />
     <!-- needs an absolute path! -->
     <param name="tub_path"        type="string" value="$(find dop_tch)"  />
@@ -12,6 +12,8 @@
     <param name="ws_path"         type="string" value="/root/dop_tch"                  />
   </node>
 
-  <node if="$(arg start_master)" name="docker_master" pkg="rosdop" type="docker_master.py" output="screen"/>
+  <node if="$(arg start_master)" name="docker_master" pkg="rosdop" type="docker_master.py" output="screen">
+    <param name="use_dnsmasq"  type="bool" value="True"                           />
+  </node>
 
 </launch>
