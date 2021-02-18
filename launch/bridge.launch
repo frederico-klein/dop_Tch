@@ -1,9 +1,11 @@
 <launch>
   <!-- this is suboptimal. I need to keep changing this 172.28.6.YYY in a lot of places.  -->
   <!-- TODO: parametrize docker host`s ip -->
+  <!-- this is a new networking idea. more simple, but I "know" what I am doing -->
   <node name="my_bridge_spawner" pkg="rosdop" type="cr_bridge.py" output="screen">
     <param name="name"    type="string" value="br0"           />
     <param name="subnet"  type="string" value="172.28.0.0/16" />
+    <!-- <param name="subnet"  type="string" value="172.28.5.0/24" /> -->
     <param name="iprange" type="string" value="172.28.5.0/24" />
     <param name="gateway" type="string" value="172.28.5.254"  />
   </node>
