@@ -9,6 +9,7 @@ echo "history -s /tmp/start.sh " >> /root/.bashrc
 echo "history -s wandb login " >> /root/.bashrc
 echo "history -s jupyter notebook --port=8888 --no-browser --ip=`hostname -I` --allow-root " >> /root/.bashrc
 echo "history -s git clone https://github.com/amreelab/esa_project.git " >> /root/.bashrc
+echo "history -s  catkin_make -DPYTHON_VERSION=3.6 " >> /root/.bashrc
 
 find /root/dop_tch/workspace -maxdepth 1 -mindepth 1 -type d -exec ln -vs "{}" /workspace/ ';'
 ln -s /mnt/share/misc /workspace/misc
