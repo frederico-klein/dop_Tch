@@ -18,5 +18,5 @@ ln -s /mnt/share/misc /workspace/misc
 service ssh restart
 cat /etc/banner.txt
 export ROS_MASTER_URI=http://lavine.local:11311
-source /workspace/catkin_ws/devel/setup.bash
+. /workspace/catkin_ws/devel/setup.bash
 exec "$@"
