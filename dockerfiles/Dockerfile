@@ -55,7 +55,7 @@ RUN cd /root/ros_catkin_ws \
     && rosdep install --from-paths src --ignore-src -y
 
 RUN cd /root/ros_catkin_ws \
-    && catkin build -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Release -DPYTHON_VERSION=3.6 
+    && catkin build -DCATKIN_ENABLE_TESTING=0 -DCMAKE_BUILD_TYPE=Release -DPYTHON_VERSION=3.6
 
 # RUN cd /root/ros_catkin_ws &&\
 #   ~/ros_catkin_ws/src/catkin/bin/catkin_make_isolated --install \
@@ -79,5 +79,5 @@ RUN cd /root/ros_catkin_ws \
 #   ln -s /opt/conda/lib/libcudart.so.11.0  /usr/local/nvidia/lib/libcudart.so.10.1
 
 ADD scripts/entrypoint.sh /root/
-WORKDIR /workspace
+#WORKDIR /workspace
 ENTRYPOINT ["/root/entrypoint.sh"]
