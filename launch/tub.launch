@@ -7,7 +7,8 @@
     <param name="tub_volume"      type="string"       value="tubvolume0"     />
     <param name="container_hostname"        type="string"       value="torch_machine4" />
     <param name="dockerfile_directory" type="string"  value="."              />
-    <param name="containerip"            type="string"  value="172.28.5.31"    />
+    <param name="containerip"            type="string"  value="172.28.6.31"    />
+    <param name="hostname_as_suffix"         type="bool" value="true"                  />
   </node>
 
 </launch>

@@ -1,10 +1,10 @@
 <launch>
-    <group ns ="m1">
-      <arg name="start_master" default="True" />
-      <include file="$(find dop_tch)/launch/volume.launch" >
-        <arg name="start_master" value="$(arg start_master)" />
-      </include>
-      <include file="$(find dop_tch)/launch/tub.launch" />
-      <include file="$(find dop_tch)/launch/bridge.launch" />
-  </group>
+  <group ns ="m1">
+    <arg name="start_master" default="True" />
+    <include file="$(find dop_tch)/launch/v+m.launch" >
+      <arg name="start_master" value="$(arg start_master)" />
+    </include>
+    <include file="$(find dop_tch)/launch/tub.launch" />
+    <include file="$(find dop_tch)/launch/bridge.launch" />
+</group>
 </launch>
